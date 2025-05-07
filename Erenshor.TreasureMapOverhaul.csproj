@@ -38,6 +38,7 @@
       <Compile Include="ItemDBPatch.cs" />
       <Compile Include="LootPatch.cs" />
       <Compile Include="Plugin.cs" />
+      <Compile Include="QuestPatch.cs" />
     </ItemGroup>
     <ItemGroup>
       <Reference Include="0Harmony">
