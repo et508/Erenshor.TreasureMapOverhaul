@@ -1,6 +1,7 @@
 using BepInEx;
 using BepInEx.Logging;
 using HarmonyLib;
+using System.Linq;
 
 namespace TreasureMapOverhaul
 {
@@ -15,6 +16,7 @@ namespace TreasureMapOverhaul
             Log.LogInfo("Treasure Map Overhaul loaded.");
             var harmony = new Harmony("et508.erenshor.treasuremapoverhaul");
             harmony.PatchAll();
+            Log.LogInfo($"[TMO] Total patched methods: {harmony.GetPatchedMethods().Count()}");
         }
     }
 }
