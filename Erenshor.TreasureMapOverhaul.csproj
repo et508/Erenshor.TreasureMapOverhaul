@@ -36,6 +36,7 @@
       <Compile Include="BankPatch.cs" />
       <Compile Include="InventoryPatch.cs" />
       <Compile Include="ItemDBPatch.cs" />
+      <Compile Include="LootPatch.cs" />
       <Compile Include="Plugin.cs" />
     </ItemGroup>
     <ItemGroup>
