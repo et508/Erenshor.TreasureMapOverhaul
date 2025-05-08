@@ -34,7 +34,7 @@ namespace TreasureMapOverhaul
             var tornMap = Object.Instantiate(baseMap);
             tornMap.Id = "et508.tornmap";             
             tornMap.ItemName = "A Torn Treasure Map"; 
-            tornMap.Lore = "A tattered piece of parchment with strange markings.";
+            tornMap.Lore = "A piece of an old map.";
             tornMap.Stackable = true;
             tornMap.Unique = true;
             tornMap.ItemValue = 0;
