@@ -45,23 +45,17 @@ namespace TreasureMapOverhaul
                 return;
             }
 
-            // If any old map IDs are in the required items, replace entire list with a single torn map
+            // Replace each old map requirement directly
             if (quest.RequiredItems != null)
             {
-                bool hasOld = false;
-                foreach (var item in quest.RequiredItems)
+                for (int i = 0; i < quest.RequiredItems.Count; i++)
                 {
-                    if (item != null && Array.IndexOf(oldIds, item.Id) >= 0)
+                    var req = quest.RequiredItems[i];
+                    if (req != null && Array.IndexOf(oldIds, req.Id) >= 0)
                     {
-                        hasOld = true;
-                        break;
+                        Plugin.Log.LogInfo($"[TMO] Quest '{quest.QuestName}': replacing required map {req.Id} with torn map.");
+                        quest.RequiredItems[i] = tornMap;
                     }
-                }
-                if (hasOld)
-                {
-                    Plugin.Log.LogInfo($"[TMO] Quest '{quest.QuestName}': replacing all required items with single torn map.");
-                    quest.RequiredItems.Clear();
-                    quest.RequiredItems.Add(tornMap);
                 }
             }
         }

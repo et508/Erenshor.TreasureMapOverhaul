@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace TreasureMapOverhaul
 {
-    [BepInPlugin("et508.erenshor.treasuremapoverhaul", "Treasure Map Overhaul", "1.0.0")]
+    [BepInPlugin("et508.erenshor.treasuremapoverhaul", "Treasure Map Overhaul", "0.0.1")]
     public class Plugin : BaseUnityPlugin
     {
         internal static ManualLogSource Log;
