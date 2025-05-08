@@ -12,12 +12,12 @@ namespace TreasureMapOverhaul
         public static void OnCharacterEnter()
         {
             // 1) sanity check plugin loaded
-            Plugin.Log.LogInfo("[TMO] CharSelectManager.Play postfix fired.");
+            // Plugin.Log.LogInfo("[TMO] CharSelectManager.Play postfix fired.");
 
             var inv = GameData.PlayerInv;
             if (inv == null)
             {
-                Plugin.Log.LogWarning("[TMO] PlayerInv is null. Inventory not ready yet?");
+                Plugin.Log.LogWarning("[TMO] PlayerInv is null. Inventory not loaded.");
                 return;
             }
 
@@ -25,7 +25,7 @@ namespace TreasureMapOverhaul
             for (int i = 0; i < Mathf.Min(5, inv.StoredSlots.Count); i++)
             {
                 var item = inv.StoredSlots[i].MyItem;
-                Plugin.Log.LogInfo($"[TMO] Slot {i}: {(item != null ? item.Id : "EMPTY")} x{inv.StoredSlots[i].Quantity}");
+                // Plugin.Log.LogInfo($"[TMO] Slot {i}: {(item != null ? item.Id : "EMPTY")} x{inv.StoredSlots[i].Quantity}");
             }
 
             // 3) now do the replace/add logic
@@ -43,7 +43,7 @@ namespace TreasureMapOverhaul
                 if (item != null && oldIds.Contains(item.Id))
                 {
                     total += slot.Quantity;
-                    Plugin.Log.LogInfo($"[TMO] Removing old map {item.Id} x{slot.Quantity} from slot.");
+                    // Plugin.Log.LogInfo($"[TMO] Removing old map {item.Id} x{slot.Quantity} from slot.");
                     slot.MyItem = inv.Empty;
                     slot.Quantity = 1;
                     slot.UpdateSlotImage();
@@ -52,7 +52,7 @@ namespace TreasureMapOverhaul
 
             if (total == 0)
             {
-                Plugin.Log.LogInfo("[TMO] No old maps found to replace.");
+                // Plugin.Log.LogInfo("[TMO] No old maps found to replace.");
                 return;
             }
 
@@ -66,7 +66,7 @@ namespace TreasureMapOverhaul
             for (int i = 0; i < total; i++)
                 inv.AddItemToInv(torn);
 
-            Plugin.Log.LogInfo($"[TMO] Added {total} Torn Treasure Map(s).");
+            // Plugin.Log.LogInfo($"[TMO] Added {total} Torn Treasure Map(s).");
         }
     }
 }

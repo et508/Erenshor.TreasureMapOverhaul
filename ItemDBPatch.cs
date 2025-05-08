@@ -32,8 +32,8 @@ namespace TreasureMapOverhaul
 
             // Clone and configure new item
             var tornMap = Object.Instantiate(baseMap);
-            tornMap.Id = "et508.tornmap";              // Internal ID
-            tornMap.ItemName = "A Torn Treasure Map";  // Display name
+            tornMap.Id = "et508.tornmap";             
+            tornMap.ItemName = "A Torn Treasure Map"; 
             tornMap.Lore = "A tattered piece of parchment with strange markings.";
             tornMap.Stackable = true;
             tornMap.Unique = true;
@@ -45,7 +45,7 @@ namespace TreasureMapOverhaul
             // Replace the ItemDB array
             __instance.ItemDB = itemList.ToArray();
 
-            Plugin.Log.LogInfo("Injected Torn Treasure Map using list-based method.");
+            // Plugin.Log.LogInfo("Injected Torn Treasure Map using list-based method.");
         }
     }
 }

@@ -5,14 +5,13 @@ using UnityEngine;
 
 namespace TreasureMapOverhaul
 {
-    // Patch after character select to update the TreasureMap quest requirements once all data is loaded
     [HarmonyPatch(typeof(CharSelectManager), "Play")]
     public static class QuestPatch
     {
         [HarmonyPostfix]
         public static void OnCharacterEnter()
         {
-            Plugin.Log.LogInfo("[TMO] QuestPatch triggered on CharSelectManager.Play.");
+            // Plugin.Log.LogInfo("[TMO] QuestPatch triggered on CharSelectManager.Play.");
 
             // Ensure QuestDB and ItemDB are initialized
             if (GameData.QuestDB == null)
@@ -53,7 +52,7 @@ namespace TreasureMapOverhaul
                     var req = quest.RequiredItems[i];
                     if (req != null && Array.IndexOf(oldIds, req.Id) >= 0)
                     {
-                        Plugin.Log.LogInfo($"[TMO] Quest '{quest.QuestName}': replacing required map {req.Id} with torn map.");
+                        // Plugin.Log.LogInfo($"[TMO] Quest '{quest.QuestName}': replacing required map {req.Id} with torn map.");
                         quest.RequiredItems[i] = tornMap;
                     }
                 }

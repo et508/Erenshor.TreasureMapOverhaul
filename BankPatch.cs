@@ -11,7 +11,7 @@ namespace TreasureMapOverhaul
         [HarmonyPostfix]
         public static void OnBankLoad(GlobalBank __instance)
         {
-            Plugin.Log.LogInfo("[TMO] GlobalBank.LoadBank postfix fired.");
+            // Plugin.Log.LogInfo("[TMO] GlobalBank.LoadBank postfix fired.");
             ReplaceOldAndAddBank(__instance);
             // Refresh bank UI after modifications
             __instance.DisplayBankPage();
@@ -29,7 +29,7 @@ namespace TreasureMapOverhaul
                 if (item != null && oldIds.Contains(item.Id))
                 {
                     totalCount += bank.Quantities[i];
-                    Plugin.Log.LogInfo($"[TMO] Removing old map {item.Id} x{bank.Quantities[i]} from bank slot {i}.");
+                    // Plugin.Log.LogInfo($"[TMO] Removing old map {item.Id} x{bank.Quantities[i]} from bank slot {i}.");
                     bank.StoredItems[i] = GameData.PlayerInv.Empty;
                     bank.Quantities[i] = 0;
                 }
@@ -51,7 +51,7 @@ namespace TreasureMapOverhaul
             if (stackSlot >= 0)
             {
                 bank.Quantities[stackSlot] += totalCount;
-                Plugin.Log.LogInfo($"[TMO] Stacked {totalCount} Torn Treasure Map(s) into slot {stackSlot} (new qty {bank.Quantities[stackSlot]}).");
+                // Plugin.Log.LogInfo($"[TMO] Stacked {totalCount} Torn Treasure Map(s) into slot {stackSlot} (new qty {bank.Quantities[stackSlot]}).");
             }
             else
             {
@@ -61,7 +61,7 @@ namespace TreasureMapOverhaul
                 {
                     bank.StoredItems[emptySlot] = torn;
                     bank.Quantities[emptySlot] = totalCount;
-                    Plugin.Log.LogInfo($"[TMO] Added {totalCount} Torn Treasure Map(s) to empty bank slot {emptySlot}.");
+                    // Plugin.Log.LogInfo($"[TMO] Added {totalCount} Torn Treasure Map(s) to empty bank slot {emptySlot}.");
                 }
                 else
                 {
