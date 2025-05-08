@@ -16,7 +16,7 @@ Overhaul to the Repairing Treasure Maps quest. Replaces the 4 map corners with a
 - This mod will replace any treasure map corners you currently have with the new "A Torn Treasure Map". In your bank and your inventory.
 - Removes the old corner maps from the loot tables and replaces with the new map.
 - Changes the quest turn in for a Treasure Map to 4 of the new "A Torn Treasure Map". No more hunting down corners or stock piling 1 type and never seeing another.
-- This does effectivly remove the old map corners from the game. So if you use this mod and then remove it you will lose what maps you had. 
+- This does effectively remove the old map corners from the game. So if you use this mod and then remove it you will lose what maps you had. 
 
 ## Erenshor LootTables
 - Erenshor pre loads the loot table for every NPC when the scene loads.
