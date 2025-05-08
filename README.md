@@ -3,7 +3,7 @@ Overhaul to the Repairing Treasure Maps quest. Replaces the 4 map corners with a
 
 ## Installation
 - Install [BepInEx Mod Pack](https://thunderstore.io/package/bbepis/BepInExPack/)
-- Download the latest [release](https://github.com/et508/Erenshor.TreasureMapOverhaul/releases)
+- Download the latest [release](https://github.com/et508/Erenshor.TreasureMapOverhaul/releases/1.0.0)
 - Extract files from Erenshor."ModNameHere".zip into Erenshor\BepInEx\plugins\ folder.
 
 ## Changing Drop Rate
