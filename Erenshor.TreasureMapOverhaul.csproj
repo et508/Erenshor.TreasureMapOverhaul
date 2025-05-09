@@ -39,6 +39,7 @@
       <Compile Include="LootPatch.cs" />
       <Compile Include="Plugin.cs" />
       <Compile Include="QuestPatch.cs" />
+      <Compile Include="WaterPatch.cs" />
     </ItemGroup>
     <ItemGroup>
       <Reference Include="0Harmony">
