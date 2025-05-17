@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace TreasureMapOverhaul
 {
-    [BepInPlugin("et508.erenshor.treasuremapoverhaul", "Treasure Map Overhaul", "1.0.1")]
+    [BepInPlugin("et508.erenshor.treasuremapoverhaul", "Treasure Map Overhaul", "1.0.2")]
     public class Plugin : BaseUnityPlugin
     {
         internal static ManualLogSource Log;
@@ -18,9 +18,9 @@ namespace TreasureMapOverhaul
             TreasureMapDropChancePercent = TreasureMapDropChancePercent = Config.Bind(
                 "Drop Chance",
                 "TreasureMapDropChance",
-                0.4f, // Default 0.4% (game default 0.004)
+                2.0f, // Default 2%
                 new ConfigDescription(
-                    "Chance to drop A Torn Treasure Map (0.0-100%). Default: 0.4%. Reload scene or wait for new respawns for changes to apply.",
+                    "Chance to drop A Torn Treasure Map (0.0-100%). Default: 2.0%. Reload scene or wait for new respawns for changes to apply.",
                     new AcceptableValueRange<float>(0f, 100f)
                 ));
 
