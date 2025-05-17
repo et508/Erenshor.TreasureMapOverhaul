@@ -2,7 +2,7 @@
 Overhaul to the Repairing Treasure Maps quest. Replaces the 4 map corners with a new item "A Torn Treasure Map".
 
 ## Installation
-- Install [BepInEx Mod Pack](https://thunderstore.io/package/bbepis/BepInExPack/)
+- Install [BepInEx Mod Pack](https://thunderstore.io/c/erenshor/p/BepInEx/BepInExPack/)
 - Download the latest [release](https://github.com/et508/Erenshor.TreasureMapOverhaul/releases/1.0.1)
 - Extract files from Erenshor.TreasureMapOverhaul.zip into Erenshor\BepInEx\plugins\ folder.
 
