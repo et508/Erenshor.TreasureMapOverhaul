@@ -21,3 +21,6 @@ Overhaul to the Repairing Treasure Maps quest. Replaces the 4 map corners with a
 ## Erenshor LootTables
 - Erenshor pre loads the loot table for every NPC when the scene loads.
 - If changing drop chance using a ingame config manager, changes to drop rates will only apply to newly spawned enemies. Reload the scene or wait for new respawns for changes to apply.
+
+## Known Issues
+- I have had a few reports now of the quest turn in not working, as well as the converting of the old maps to the new map not working. I have been unable to reproduce these bugs on my end. I put some extra error loggin in place as of version 1.0.2 to try and catch these bugs. If you are experiancing any of these problems, please let me know in the [discord post.](https://discord.com/channels/1099145747364057118/1369926805120745612)
