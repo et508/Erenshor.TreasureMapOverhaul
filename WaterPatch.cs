@@ -13,37 +13,52 @@ namespace TreasureMapOverhaul
         [HarmonyPostfix]
         public static void OnWaterStart(Water __instance)
         {
-            // Plugin.Log.LogInfo("[TMO] Water.Start postfix fired. Patching fishable items.");
-
-            // ID of old map to replace
-            string oldFishableId = "28043030";
-            // Get the new torn map item
-            var tornMap = GameData.ItemDB.GetItemByID("et508.tornmap");
-            if (tornMap == null)
+            try
             {
-                Plugin.Log.LogError("[TMO] Torn map not found in ItemDB! Fishable patch aborted.");
-                return;
-            }
-
-            // Helper to replace in a list
-            void ReplaceInList(List<Item> list, string listName)
-            {
-                if (list == null) return;
-                for (int i = 0; i < list.Count; i++)
+                if (__instance == null)
                 {
-                    var item = list[i];
-                    if (item != null && item.Id == oldFishableId)
+                    Plugin.Log.LogError("[TMO] WaterPatch failed: Water instance is null.");
+                    return;
+                }
+
+                // ID of old map to replace
+                const string oldFishableId = "28043030";
+
+                // Get the new torn map item
+                var tornMap = GameData.ItemDB?.GetItemByID("et508.tornmap");
+                if (tornMap == null)
+                {
+                    Plugin.Log.LogError("[TMO] Torn map not found in ItemDB! Fishable patch aborted.");
+                    return;
+                }
+
+                // Helper to replace in a list
+                void ReplaceInList(List<Item> list, string listName)
+                {
+                    if (list == null)
                     {
-                        list[i] = tornMap;
-                        // Plugin.Log.LogInfo($"[TMO] Replaced fishable map in {listName}[{i}] from {oldFishableId} to {tornMap.Id}.");
+                        Plugin.Log.LogError($"[TMO] {listName} list is null in WaterPatch.");
+                        return;
+                    }
+                    for (int i = 0; i < list.Count; i++)
+                    {
+                        var item = list[i];
+                        if (item != null && item.Id == oldFishableId)
+                        {
+                            list[i] = tornMap;
+                        }
                     }
                 }
-            }
 
-            // Replace in DayFishables, NightFishables, and active Fishables lists
-            ReplaceInList(__instance.DayFishables, "DayFishables");
-            ReplaceInList(__instance.NightFishables, "NightFishables");
-            ReplaceInList(__instance.Fishables, "Fishables");
+                // Replace in DayFishables, NightFishables, and active Fishables lists
+                ReplaceInList(__instance.DayFishables, "DayFishables");
+                ReplaceInList(__instance.NightFishables, "NightFishables");
+                ReplaceInList(__instance.Fishables, "Fishables");
+            }
+            catch (Exception ex)
+            {
+                Plugin.Log.LogError($"[TMO] Exception in WaterPatch.OnWaterStart: {ex}");
+            }
         }
     }
 }

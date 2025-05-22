@@ -1,7 +1,8 @@
 using BepInEx.Logging;
 using HarmonyLib;
-using System.Linq;
+using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace TreasureMapOverhaul
 {
@@ -11,62 +12,77 @@ namespace TreasureMapOverhaul
         [HarmonyPostfix]
         public static void OnCharacterEnter()
         {
-            // 1) sanity check plugin loaded
-            // Plugin.Log.LogInfo("[TMO] CharSelectManager.Play postfix fired.");
-
-            var inv = GameData.PlayerInv;
-            if (inv == null)
+            try
             {
-                Plugin.Log.LogWarning("[TMO] PlayerInv is null. Inventory not loaded.");
-                return;
-            }
+                var inv = GameData.PlayerInv;
+                if (inv == null)
+                {
+                    Plugin.Log.LogError("[TMO] PlayerInv is null in InventoryPatch.OnCharacterEnter.");
+                    return;
+                }
+                if (inv.StoredSlots == null)
+                {
+                    Plugin.Log.LogError("[TMO] StoredSlots is null in InventoryPatch.OnCharacterEnter.");
+                    return;
+                }
 
-            // 2) dump the first few slots so we know what's actually in the inventory at this point
-            for (int i = 0; i < Mathf.Min(5, inv.StoredSlots.Count); i++)
+                ReplaceOldAndAdd(inv);
+            }
+            catch (Exception ex)
             {
-                var item = inv.StoredSlots[i].MyItem;
-                // Plugin.Log.LogInfo($"[TMO] Slot {i}: {(item != null ? item.Id : "EMPTY")} x{inv.StoredSlots[i].Quantity}");
+                Plugin.Log.LogError($"[TMO] Exception in InventoryPatch.OnCharacterEnter: {ex}");
             }
-
-            // 3) now do the replace/add logic
-            ReplaceOldAndAdd(inv);
         }
 
         private static void ReplaceOldAndAdd(Inventory inv)
         {
-            string[] oldIds = { "28362792", "270986", "6188236", "28043030" };
-            int total = 0;
-
-            foreach (var slot in inv.StoredSlots)
+            try
             {
-                var item = slot.MyItem;
-                if (item != null && oldIds.Contains(item.Id))
+                string[] oldIds = { "28362792", "270986", "6188236", "28043030" };
+                int total = 0;
+
+                var slots = inv.StoredSlots; // List<ItemIcon>
+                if (slots == null)
                 {
-                    total += slot.Quantity;
-                    // Plugin.Log.LogInfo($"[TMO] Removing old map {item.Id} x{slot.Quantity} from slot.");
-                    slot.MyItem = inv.Empty;
-                    slot.Quantity = 1;
-                    slot.UpdateSlotImage();
+                    Plugin.Log.LogError("[TMO] StoredSlots is null in InventoryPatch.ReplaceOldAndAdd.");
+                    return;
+                }
+
+                // Count and remove old maps
+                foreach (var icon in slots)
+                {
+                    var item = icon.MyItem;
+                    if (item != null && Array.IndexOf(oldIds, item.Id) >= 0)
+                    {
+                        total += icon.Quantity;
+                        icon.MyItem = inv.Empty;
+                        icon.Quantity = 1;
+                        icon.UpdateSlotImage();
+                    }
+                }
+
+                if (total == 0)
+                    return;
+
+                var torn = GameData.ItemDB?.GetItemByID("et508.tornmap");
+                if (torn == null)
+                {
+                    Plugin.Log.LogError("[TMO] Torn map not found in ItemDB in ReplaceOldAndAdd.");
+                    return;
+                }
+
+                // Add torn maps
+                for (int i = 0; i < total; i++)
+                {
+                    bool added = inv.AddItemToInv(torn);
+                    if (!added)
+                        Plugin.Log.LogError($"[TMO] Failed to add torn map instance {i + 1}/{total} in ReplaceOldAndAdd.");
                 }
             }
-
-            if (total == 0)
+            catch (Exception ex)
             {
-                // Plugin.Log.LogInfo("[TMO] No old maps found to replace.");
-                return;
+                Plugin.Log.LogError($"[TMO] Exception in InventoryPatch.ReplaceOldAndAdd: {ex}");
             }
-
-            var torn = GameData.ItemDB.GetItemByID("et508.tornmap");
-            if (torn == null)
-            {
-                Plugin.Log.LogError("[TMO] Torn map not found in ItemDB!");
-                return;
-            }
-
-            for (int i = 0; i < total; i++)
-                inv.AddItemToInv(torn);
-
-            // Plugin.Log.LogInfo($"[TMO] Added {total} Torn Treasure Map(s).");
         }
     }
 }
