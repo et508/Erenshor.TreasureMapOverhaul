@@ -1,3 +1,7 @@
+## [1.0.3] - 6/24/2025
+### Fixed
+- Rebuilt plugin using BepInEx 5.4.21.0. Miss matching version warning should not longer appear.
+
 ## [1.0.2] - 5/22/2025
 ### Fixed
 - Fixed default drop chance.
