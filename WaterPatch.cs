@@ -1,15 +1,21 @@
-using BepInEx.Logging;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace TreasureMapOverhaul
 {
-    // Patch Water.Start to replace old fishable maps with the new torn map
+    // Replace old fishable maps with the new Torn Map in Water.Start
     [HarmonyPatch(typeof(Water), "Start")]
     public static class WaterPatch
     {
+        // Old (vanilla) fishable map Unity object name
+        private const string OldFishableName = "GEN - Torn Map Top Right";
+
+        // Your new Torn Map Unity object name (as defined in your assetbundle)
+        private const string NewTornMapName = "GEN - A Torn Map";
+
         [HarmonyPostfix]
         public static void OnWaterStart(Water __instance)
         {
@@ -17,48 +23,49 @@ namespace TreasureMapOverhaul
             {
                 if (__instance == null)
                 {
-                    Plugin.Log.LogError("[TMO] WaterPatch failed: Water instance is null.");
+                    Plugin.Log.LogError("[TMO] WaterPatch: Water instance is null.");
                     return;
                 }
 
-                // ID of old map to replace
-                const string oldFishableId = "28043030";
+                // Look up the Torn Map by object name in ItemDB
+                var tornMap = GameData.ItemDB?.ItemDB
+                    ?.FirstOrDefault(i => i != null && i.name == NewTornMapName);
 
-                // Get the new torn map item
-                var tornMap = GameData.ItemDB?.GetItemByID("et508.tornmap");
                 if (tornMap == null)
                 {
-                    Plugin.Log.LogError("[TMO] Torn map not found in ItemDB! Fishable patch aborted.");
+                    Plugin.Log.LogWarning($"[TMO] WaterPatch: Torn Map '{NewTornMapName}' not found in ItemDB; skipping fishable replacement.");
                     return;
                 }
 
-                // Helper to replace in a list
-                void ReplaceInList(List<Item> list, string listName)
-                {
-                    if (list == null)
-                    {
-                        Plugin.Log.LogError($"[TMO] {listName} list is null in WaterPatch.");
-                        return;
-                    }
-                    for (int i = 0; i < list.Count; i++)
-                    {
-                        var item = list[i];
-                        if (item != null && item.Id == oldFishableId)
-                        {
-                            list[i] = tornMap;
-                        }
-                    }
-                }
+                int total = 0;
+                total += ReplaceInList(__instance.DayFishables, tornMap);
+                total += ReplaceInList(__instance.NightFishables, tornMap);
+                total += ReplaceInList(__instance.Fishables, tornMap);
 
-                // Replace in DayFishables, NightFishables, and active Fishables lists
-                ReplaceInList(__instance.DayFishables, "DayFishables");
-                ReplaceInList(__instance.NightFishables, "NightFishables");
-                ReplaceInList(__instance.Fishables, "Fishables");
+                if (total > 0)
+                    Plugin.Log.LogInfo($"[TMO] WaterPatch: Replaced {total} old fishable map entries with Torn Map '{NewTornMapName}'.");
             }
             catch (Exception ex)
             {
-                Plugin.Log.LogError($"[TMO] Exception in WaterPatch.OnWaterStart: {ex}");
+                Plugin.Log.LogError($"[TMO] WaterPatch exception: {ex}");
             }
+        }
+
+        private static int ReplaceInList(List<Item> list, Item tornMap)
+        {
+            if (list == null) return 0;
+
+            int replaced = 0;
+            for (int i = 0; i < list.Count; i++)
+            {
+                var it = list[i];
+                if (it != null && it.name == OldFishableName) // match by object name
+                {
+                    list[i] = tornMap;
+                    replaced++;
+                }
+            }
+            return replaced;
         }
     }
 }
