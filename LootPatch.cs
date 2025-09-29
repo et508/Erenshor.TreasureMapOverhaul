@@ -1,54 +1,78 @@
-using System;
-using BepInEx.Logging;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using HarmonyLib;
 using UnityEngine;
 
 namespace TreasureMapOverhaul
 {
     [HarmonyPatch(typeof(LootTable), "InitLootTable")]
-    public static class LootInitPatch
+    public static class LootTable_InitLootTable_MapChance_Transpiler
     {
-        [HarmonyPostfix]
-        public static void OnInitLoot(LootTable __instance)
+        [HarmonyTranspiler]
+        public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            var src   = new List<CodeInstruction>(instructions);
+            var dst   = new List<CodeInstruction>(src.Count);
+            bool replaced = false;
+            int i = 0;
+
+            while (i < src.Count)
+            {
+                var ci = src[i];
+                
+                if (!replaced && ci.opcode == OpCodes.Ldc_R4 && ci.operand is float f && Mathf.Approximately(f, 0.0125f))
+                {
+                    
+                    dst.Add(new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(LootTable_InitLootTable_MapChance_Transpiler), nameof(ConfigChance))));
+                    
+                    int j = i + 1;
+                    
+                    if (j < src.Count && (IsLoadLike(src[j]) ))
+                    {
+                        j++;
+                    }
+                    
+                    if (j < src.Count && src[j].opcode == OpCodes.Mul)
+                    {
+                        j++;
+                    }
+
+                    i = j;         
+                    replaced = true;
+                    continue;
+                }
+
+                dst.Add(ci);
+                i++;
+            }
+
+            if (!replaced)
+            {
+                Plugin.Log.LogWarning("[TMO] MapChance Transpiler: 0.0125f constant not found; map gate not patched.");
+            }
+
+            return dst;
+        }
+
+        private static bool IsLoadLike(CodeInstruction ci)
+        {
+            var op = ci.opcode;
+            
+            return op == OpCodes.Ldloc || op == OpCodes.Ldloc_S || op == OpCodes.Ldloc_0 || op == OpCodes.Ldloc_1
+                   || op == OpCodes.Ldloc_2 || op == OpCodes.Ldloc_3
+                   || op == OpCodes.Ldsfld || op == OpCodes.Ldfld || op == OpCodes.Call; // e.g., a getter
+        }
+        
+        public static float ConfigChance()
         {
             try
             {
-                if (__instance == null)
-                {
-                    Plugin.Log.LogError("[TMO] LootInitPatch: LootTable instance is null.");
-                    return;
-                }
-                if (__instance.ActualDrops == null)
-                {
-                    Plugin.Log.LogError("[TMO] LootInitPatch: ActualDrops list is null.");
-                    return;
-                }
-
-                // Remove any old map drops
-                string[] oldIds = { "28362792", "270986", "6188236", "28043030" };
-                __instance.ActualDrops.RemoveAll(item => item != null && Array.IndexOf(oldIds, item.Id) >= 0);
-
-                // Get the new torn map
-                var tornMap = GameData.ItemDB?.GetItemByID("et508.tornmap");
-                if (tornMap == null)
-                {
-                    Plugin.Log.LogError("[TMO] LootInitPatch: Torn map not found in ItemDB.");
-                    return;
-                }
-
-                // Determine drop chance from config
-                float dropChance = Plugin.GetNormalizedChance(Plugin.TreasureMapDropChancePercent);
-
-                // Inject torn map based on configured chance
-                if (!__instance.ActualDrops.Contains(tornMap) && UnityEngine.Random.value < dropChance)
-                {
-                    __instance.ActualDrops.Add(tornMap);
-                    __instance.special = true;
-                }
+                float v = Plugin.GetNormalizedChance(Plugin.TreasureMapDropChancePercent);
+                return Mathf.Clamp01(v);
             }
-            catch (Exception ex)
+            catch
             {
-                Plugin.Log.LogError($"[TMO] Exception in LootInitPatch.OnInitLoot: {ex}");
+                return 0.0125f;
             }
         }
     }

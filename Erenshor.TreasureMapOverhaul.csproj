@@ -33,12 +33,15 @@
         <WarningLevel>4</WarningLevel>
     </PropertyGroup>
     <ItemGroup>
+      <Compile Include="BankFallback.cs" />
       <Compile Include="BankPatch.cs" />
       <Compile Include="InventoryPatch.cs" />
       <Compile Include="ItemDBPatch.cs" />
+      <Compile Include="ItemDB_GetItemByID_Fallback.cs" />
       <Compile Include="LootPatch.cs" />
       <Compile Include="Plugin.cs" />
-      <Compile Include="QuestPatch.cs" />
+      <Compile Include="QuestDBPatch.cs" />
+      <Compile Include="TmoAssets.cs" />
       <Compile Include="WaterPatch.cs" />
     </ItemGroup>
     <ItemGroup>
@@ -57,8 +60,14 @@
       <Reference Include="UnityEngine">
         <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Erenshor\Erenshor_Data\Managed\UnityEngine.dll</HintPath>
       </Reference>
+      <Reference Include="UnityEngine.AssetBundleModule">
+        <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Erenshor\Erenshor_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      </Reference>
       <Reference Include="UnityEngine.CoreModule">
         <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Erenshor\Erenshor_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      </Reference>
+      <Reference Include="UnityEngine.JSONSerializeModule">
+        <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\Erenshor\Erenshor_Data\Managed\UnityEngine.JSONSerializeModule.dll</HintPath>
       </Reference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
