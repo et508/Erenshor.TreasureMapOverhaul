@@ -19,7 +19,6 @@ Overhaul to the Repairing Treasure Maps quest. Replaces the 4 map corners with a
 - This does effectively remove the old map corners from the game. So if you use this mod and then remove it you will lose what maps you had. 
 
 ## Erenshor LootTables
-- Erenshor pre loads the loot table for every NPC when the scene loads.
 - If changing drop chance using a ingame config manager, changes to drop rates will only apply to newly spawned enemies. Reload the scene or wait for new respawns for changes to apply.
 
 ## Elusive Bug
