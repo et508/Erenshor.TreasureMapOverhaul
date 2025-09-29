@@ -1,4 +1,4 @@
-## [1.0.4] - TBD
+## [1.0.4] - 9/29/2025
 ### Erenshor Overhaul Patch 0.2
 - Update to work with v0.2.
 
