@@ -5,12 +5,11 @@ using UnityEngine;
 
 namespace TreasureMapOverhaul
 {
-    // Ensures the bank loader can resolve our Torn Map ID ("99999999")
     [HarmonyPatch(typeof(ItemDatabase), "GetItemByID", new[] { typeof(string) })]
     public static class Bank_GetItemByID_Fallback
     {
         private const string TornMapId = "99999999";
-        private const string PreferredAssetName = "GEN - A Torn Map"; // optional object name in bundle
+        private const string PreferredAssetName = "GEN - A Torn Map";
 
         public static void Postfix(ItemDatabase __instance, string __0, ref Item __result)
         {
@@ -20,8 +19,7 @@ namespace TreasureMapOverhaul
                 if (__result != null && !IsEmpty(__result)) return;
 
                 if (!TmoAssets.EnsureLoaded()) return;
-
-                // Find Torn Map asset in bundle
+                
                 Item torn = null;
                 if (!string.IsNullOrWhiteSpace(PreferredAssetName))
                     torn = TmoAssets.Load<Item>(PreferredAssetName);
@@ -32,16 +30,14 @@ namespace TreasureMapOverhaul
                 if (torn == null) return;
 
                 torn.Id = TornMapId;
-
-                // Register in DB
+                
                 var list = (__instance.ItemDB ?? Array.Empty<Item>()).ToList();
                 list.RemoveAll(i => i != null && i.Id == TornMapId);
                 list.Add(torn);
                 __instance.ItemDB = list.ToArray();
 
                 __result = torn;
-
-                Plugin.Log.LogInfo("[TMO] BankFallback: registered & returned Torn Map during bank load.");
+                
             }
             catch (Exception ex)
             {

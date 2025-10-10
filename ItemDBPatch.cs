@@ -9,7 +9,7 @@ namespace TreasureMapOverhaul
     public static class ItemDBPatch
     {
         private const string TornMapId = "99999999";
-        private const string PreferredAssetName = ""; // e.g. "GEN - A Torn Map"
+        private const string PreferredAssetName = "";
 
         [HarmonyPostfix]
         public static void InjectCustomItem(ItemDatabase __instance)
@@ -23,8 +23,7 @@ namespace TreasureMapOverhaul
                 }
 
                 if (!TmoAssets.EnsureLoaded()) return;
-
-                // Load the Item from bundle (no Instantiate -> keep exact Unity name, no "(Clone)")
+                
                 Item source = null;
 
                 if (!string.IsNullOrWhiteSpace(PreferredAssetName))
@@ -38,24 +37,18 @@ namespace TreasureMapOverhaul
                     Plugin.Log.LogError("[TMO] Could not find custom Item in bundle (set PreferredAssetName or ensure Id == 99999999).");
                     return;
                 }
-
-                // Normalize Id just in case
+                
                 source.Id = TornMapId;
-
-                // Replace/add in ItemDB with the exact asset instance
+                
                 var list = __instance.ItemDB.ToList();
                 list.RemoveAll(i => i != null && i.Id == TornMapId);
                 list.Add(source);
                 __instance.ItemDB = list.ToArray();
-
-                Plugin.Log.LogInfo($"[TMO] Injected custom Item into DB: {source.ItemName} (Id={source.Id}, name='{source.name}').");
-
-                // Make GM.Maps only contain our item (same exact instance)
+                
                 if (GameData.GM?.Maps != null)
                 {
                     GameData.GM.Maps.Clear();
                     GameData.GM.Maps.Add(source);
-                    Plugin.Log.LogInfo("[TMO] GM.Maps cleared and set to Torn Map only.");
                 }
                 else
                 {

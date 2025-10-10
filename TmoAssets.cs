@@ -16,8 +16,7 @@ namespace TreasureMapOverhaul
         internal static bool EnsureLoaded()
         {
             if (_bundle != null) return true;
-
-            // Only log the attempt once to keep logs clean
+            
             if (!_loggedAttempt)
             {
                 _loggedAttempt = true;
@@ -35,8 +34,6 @@ namespace TreasureMapOverhaul
                     Plugin.Log.LogError($"[TMO] Failed to load AssetBundle at: {bundlePath}");
                     return false;
                 }
-
-                Plugin.Log.LogInfo($"[TMO] Asset bundle loaded: {bundlePath}");
                 return true;
             }
             catch (Exception ex)

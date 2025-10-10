@@ -29,7 +29,6 @@ namespace TreasureMapOverhaul
                 {
                     var c = go.AddComponent<TmoQuestReplacer>();
                     c.Init(__instance, PreferredQuestAssetName, TargetQuestDbName);
-                    Plugin.Log.LogInfo("[TMO] QuestReplace: queued quest overwrite (waiting for ItemDB).");
                 }
             }
             catch (Exception ex)
@@ -56,7 +55,7 @@ namespace TreasureMapOverhaul
 
         private IEnumerator Run()
         {
-            yield return null; // let Start chains progress
+            yield return null;
 
             float timeoutAt = Time.realtimeSinceStartup + 15f;
             while (GameData.ItemDB == null)
@@ -76,8 +75,7 @@ namespace TreasureMapOverhaul
                 Destroy(this);
                 yield break;
             }
-
-            // Load donor quest
+            
             Quest donor = null;
 
             if (!string.IsNullOrWhiteSpace(_questAssetName))
@@ -91,8 +89,6 @@ namespace TreasureMapOverhaul
             {
                 var all = TmoAssets.LoadAll<Quest>();
                 donor = all.FirstOrDefault(q => q != null && MatchesQuest(q, _targetDbName));
-                if (donor != null)
-                    Plugin.Log.LogInfo($"[TMO] QuestReplace: Auto-detected donor quest asset '{donor.name}'.");
             }
 
             if (donor == null)
@@ -102,7 +98,6 @@ namespace TreasureMapOverhaul
                 yield break;
             }
 
-            // Find live quest in QuestDB
             Quest live = FindLiveQuest(_questDb, _targetDbName);
             if (live == null)
             {
@@ -110,24 +105,20 @@ namespace TreasureMapOverhaul
                 Destroy(this);
                 yield break;
             }
-
-            // Overwrite in-place
+            
             try
             {
                 string json = JsonUtility.ToJson(donor);
                 JsonUtility.FromJsonOverwrite(json, live);
-                Plugin.Log.LogInfo($"[TMO] QuestReplace: Overwrote live quest '{GetQuestName(live)}' using donor '{donor.name}'.");
             }
             catch (Exception ex)
             {
                 Plugin.Log.LogError($"[TMO] QuestReplace: FromJsonOverwrite failed: {ex}");
             }
-
-            // Remap RequiredItems → live DB items
+            
             try
             {
                 RemapQuestItemsToLiveDB_ByNameThenId(live, GameData.ItemDB);
-                Plugin.Log.LogInfo("[TMO] QuestReplace: Remapped quest item references to live ItemDB.");
             }
             catch (Exception ex)
             {
@@ -136,8 +127,6 @@ namespace TreasureMapOverhaul
 
             Destroy(this);
         }
-
-        // --------- helpers ---------
 
         private static bool MatchesQuest(Quest q, string dbName)
         {
@@ -208,15 +197,13 @@ namespace TreasureMapOverhaul
         {
             if (donorItem == null) return null;
 
-            // Match by object name
             var donorName = donorItem.name;
             if (!string.IsNullOrEmpty(donorName))
             {
                 var foundByName = db.ItemDB?.FirstOrDefault(i => i != null && i.name == donorName);
                 if (foundByName != null) return foundByName;
             }
-
-            // Match by Id
+            
             var donorId = GetItemId(donorItem);
             if (!string.IsNullOrEmpty(donorId))
             {

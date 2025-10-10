@@ -6,14 +6,11 @@ using UnityEngine;
 
 namespace TreasureMapOverhaul
 {
-    // Replace old fishable maps with the new Torn Map in Water.Start
     [HarmonyPatch(typeof(Water), "Start")]
     public static class WaterPatch
     {
-        // Old (vanilla) fishable map Unity object name
         private const string OldFishableName = "GEN - Torn Map Top Right";
-
-        // Your new Torn Map Unity object name (as defined in your assetbundle)
+        
         private const string NewTornMapName = "GEN - A Torn Map";
 
         [HarmonyPostfix]
@@ -26,8 +23,7 @@ namespace TreasureMapOverhaul
                     Plugin.Log.LogError("[TMO] WaterPatch: Water instance is null.");
                     return;
                 }
-
-                // Look up the Torn Map by object name in ItemDB
+                
                 var tornMap = GameData.ItemDB?.ItemDB
                     ?.FirstOrDefault(i => i != null && i.name == NewTornMapName);
 
@@ -59,7 +55,7 @@ namespace TreasureMapOverhaul
             for (int i = 0; i < list.Count; i++)
             {
                 var it = list[i];
-                if (it != null && it.name == OldFishableName) // match by object name
+                if (it != null && it.name == OldFishableName)
                 {
                     list[i] = tornMap;
                     replaced++;
