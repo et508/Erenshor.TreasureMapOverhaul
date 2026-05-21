@@ -8,7 +8,7 @@ using System.IO;
 
 namespace TreasureMapOverhaul
 {
-    [BepInPlugin("et508.erenshor.treasuremapoverhaul", "Treasure Map Overhaul", "1.0.5")]
+    [BepInPlugin("et508.erenshor.treasuremapoverhaul", "Treasure Map Overhaul", "1.0.6")]
     public class Plugin : BaseUnityPlugin
     {
         internal static ManualLogSource Log;
