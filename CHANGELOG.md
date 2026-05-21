@@ -1,3 +1,7 @@
+## [1.0.6] - 05/20/2026
+### Fixed
+- Fixed a bug that was causing fishing to stop after catching a map. Fishing should now continue as normal.
+
 ## [1.0.5] - 10/10/2025
 ### Fixed
 - Cleaned up some code and got rid of the log spam TMO was creating. 
