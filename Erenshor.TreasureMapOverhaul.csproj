@@ -35,6 +35,7 @@
     <ItemGroup>
       <Compile Include="BankFallback.cs" />
       <Compile Include="BankPatch.cs" />
+      <Compile Include="FishingPatch.cs" />
       <Compile Include="InventoryPatch.cs" />
       <Compile Include="ItemDBPatch.cs" />
       <Compile Include="ItemDB_GetItemByID_Fallback.cs" />
@@ -71,11 +72,10 @@
       </Reference>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
-    <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-         Other similar extension points exist, see Microsoft.Common.targets.
-    <Target Name="BeforeBuild">
+    <Target Name="PostBuild_Debug" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+        <Exec Command='xcopy /Y /Q "$(TargetDir)$(TargetName).dll" "C:\Program Files (x86)\Steam\steamapps\common\Erenshor Playtest\BepInEx\plugins\treasure-map-overhaul"' />
     </Target>
-    <Target Name="AfterBuild">
+    <Target Name="PostBuild_Release" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+        <Exec Command='xcopy /Y /Q "$(TargetDir)$(TargetName).dll" "C:\Erenshor Modding\Plugins\Erenshor.TreasureMapOverhaul\build\Erenshor.TreasureMapOverhaul"' />
     </Target>
-    -->
 </Project>

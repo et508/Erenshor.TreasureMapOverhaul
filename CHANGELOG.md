@@ -1,3 +1,7 @@
+## [1.0.5] - 10/10/2025
+### Fixed
+- Cleaned up some code and got rid of the log spam TMO was creating. 
+
 ## [1.0.4] - 9/29/2025
 ### Erenshor Overhaul Patch 0.2
 - Update to work with v0.2.
